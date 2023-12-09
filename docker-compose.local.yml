@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  homeassistant-satellite:
+    build:
+      #context: ./homeassistant_satellite
+      context: .
+      dockerfile: LOCAL.Dockerfile
+    devices:
+      - /dev/snd:/dev/snd
+    group_add:
+      - audio
+    command:
+      - --host
+      - 192.168.1.144
+      - --wake-word
+      - wyoming
+      - --vad
+      - silero
+      - --awake-sound 
+      - sounds/awake.wav
+      - --done-sound
+      - sounds/done.wav
+      - --wyoming-host
+      - localhost
+      - --wyoming-port
+      - "14000"
+      - --mic-device
+      - plughw:2,0
+      - --snd-device
+      - plughw:2,0
+      - --wake-word-id
+      - hey dumbass
+        #- --pulseaudio
+        #- --echo-cancel
+      - --token-file 
+      - "/run/secrets/token" 
+    secrets:
+      - token
+secrets:
+  token:
+    file: ./secrets/token.txt
+      #external: true
+      #name: "${TOKEN}"
+# args:
+#   TOKEN: $TOKEN
+#--host
+#- 192.168.1.144 
